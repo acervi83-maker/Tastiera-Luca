@@ -11,7 +11,7 @@
         /* Casella del testo in alto */
         #top-section { height: 22vh; display: flex; flex-direction: column; background-color: #ffffff; border-bottom: 2px solid #ccc; padding: 6px; gap: 4px; flex-shrink: 0; }
         #text-and-actions { height: 100%; display: flex; gap: 6px; }
-        #text-box { flex: 1; background-color: #fafafa; border: 2px solid #b0bec5; border-radius: 6px; padding: 6px 10px; font-size: 22px; font-weight: bold; color: #333; display: flex; align-items: center; overflow-x: auto; white-space: nowrap; }
+        #text-box { flex: 1; background-color: #fafafa; border: 2px solid #b0bec5; border-radius: 6px; padding: 6px 10px; font-size: 24px; font-weight: bold; color: #333; display: flex; align-items: center; overflow-x: auto; white-space: nowrap; }
         .action-btn { width: 14%; border: none; border-radius: 6px; font-size: 18px; font-weight: bold; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         #btn-clear { background-color: #e53935; }
         #btn-speak { background-color: #43a047; }
@@ -19,17 +19,24 @@
         /* Sezione inferiore: Predittivo + Tastiera */
         #keyboard-section { height: 78vh; height: 78dvh; background-color: #cfd8dc; display: flex; flex-direction: column; padding: 4px; gap: 4px; flex-shrink: 0; }
         
-        /* Barra predittiva spostata sopra la tastiera */
-        #prediction-bar { height: 11%; display: flex; gap: 4px; }
-        .pred-btn { flex: 1; background-color: #e3f2fd; border: 1px solid #90caf9; border-radius: 6px; font-size: 15px; font-weight: bold; color: #0d47a1; display: flex; align-items: center; justify-content: center; cursor: pointer; white-space: nowrap; padding: 0 4px; }
+        /* Barra predittiva */
+        #prediction-bar { height: 12%; display: flex; gap: 4px; }
+        .pred-btn { flex: 1; background-color: #e3f2fd; border: 1px solid #90caf9; border-radius: 6px; font-size: 16px; font-weight: bold; color: #0d47a1; display: flex; align-items: center; justify-content: center; cursor: pointer; white-space: nowrap; padding: 0 4px; }
 
-        /* Righe dei tasti */
+        /* Righe dei tasti (spazio ingrandito per le lettere) */
         .keyboard-rows-container { flex: 1; display: flex; flex-direction: column; gap: 4px; }
         .keyboard-row { flex: 1; display: flex; gap: 4px; min-height: 0; }
-        .key { flex: 1; background-color: #ffffff; border: none; border-radius: 8px; font-size: 22px; font-weight: bold; color: #263238; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 3px rgba(0,0,0,0.15); cursor: pointer; user-select: none; -webkit-user-select: none; }
+        
+        .key { flex: 1; background-color: #ffffff; border: none; border-radius: 8px; font-size: 26px; font-weight: bold; color: #263238; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 3px rgba(0,0,0,0.15); cursor: pointer; user-select: none; -webkit-user-select: none; }
         .key:active { background-color: #b0bec5; transform: scale(0.98); }
+        
+        .key-num-toggle { flex: 1; background-color: #90a4ae; color: white; font-size: 18px; }
         .key-space { flex: 3; background-color: #ffffff; font-size: 18px; color: #555; }
-        .key-delete { flex: 1; background-color: #90a4ae; color: white; font-size: 20px; }
+        .key-delete { flex: 1; background-color: #90a4ae; color: white; font-size: 22px; }
+
+        /* Contenitore tastierino numerico (nascosto di default) */
+        #number-layer { display: none; flex-direction: column; flex: 1; gap: 4px; }
+        #letter-layer { display: flex; flex-direction: column; flex: 1; gap: 4px; }
     </style>
 </head>
 <body>
@@ -47,33 +54,102 @@
             <button class="pred-btn" onclick="insertText('GRAZIE ')">GRAZIE</button>
             <button class="pred-btn" onclick="insertText('SI ')">SÌ</button>
         </div>
+
         <div class="keyboard-rows-container">
-            <div class="keyboard-row">
-                <button class="key" onclick="addChar('1')">1</button><button class="key" onclick="addChar('2')">2</button><button class="key" onclick="addChar('3')">3</button><button class="key" onclick="addChar('4')">4</button><button class="key" onclick="addChar('5')">5</button><button class="key" onclick="addChar('6')">6</button><button class="key" onclick="addChar('7')">7</button><button class="key" onclick="addChar('8')">8</button><button class="key" onclick="addChar('9')">9</button><button class="key" onclick="addChar('0')">0</button>
+            <!-- SCHERMATA LETTERE QWERTY -->
+            <div id="letter-layer">
+                <div class="keyboard-row">
+                    <button class="key" onclick="addChar('Q')">Q</button><button class="key" onclick="addChar('W')">W</button><button class="key" onclick="addChar('E')">E</button><button class="key" onclick="addChar('R')">R</button><button class="key" onclick="addChar('T')">T</button><button class="key" onclick="addChar('Y')">Y</button><button class="key" onclick="addChar('U')">U</button><button class="key" onclick="addChar('I')">I</button><button class="key" onclick="addChar('O')">O</button><button class="key" onclick="addChar('P')">P</button>
+                </div>
+                <div class="keyboard-row">
+                    <button class="key" onclick="addChar('A')">A</button><button class="key" onclick="addChar('S')">S</button><button class="key" onclick="addChar('D')">D</button><button class="key" onclick="addChar('F')">F</button><button class="key" onclick="addChar('G')">G</button><button class="key" onclick="addChar('H')">H</button><button class="key" onclick="addChar('J')">J</button><button class="key" onclick="addChar('K')">K</button><button class="key" onclick="addChar('L')">L</button>
+                </div>
+                <div class="keyboard-row">
+                    <button class="key" onclick="addChar('Z')">Z</button><button class="key" onclick="addChar('X')">X</button><button class="key" onclick="addChar('C')">C</button><button class="key" onclick="addChar('V')">V</button><button class="key" onclick="addChar('B')">B</button><button class="key" onclick="addChar('N')">N</button><button class="key" onclick="addChar('M')">M</button><button class="key" onclick="addChar('.')">.</button><button class="key" onclick="addChar('?')">?</button>
+                </div>
             </div>
-            <div class="keyboard-row">
-                <button class="key" onclick="addChar('Q')">Q</button><button class="key" onclick="addChar('W')">W</button><button class="key" onclick="addChar('E')">E</button><button class="key" onclick="addChar('R')">R</button><button class="key" onclick="addChar('T')">T</button><button class="key" onclick="addChar('Y')">Y</button><button class="key" onclick="addChar('U')">U</button><button class="key" onclick="addChar('I')">I</button><button class="key" onclick="addChar('O')">O</button><button class="key" onclick="addChar('P')">P</button>
+
+            <!-- SCHERMATA NUMERI (ALTERNATIVA) -->
+            <div id="number-layer">
+                <div class="keyboard-row">
+                    <button class="key" onclick="addChar('1')">1</button>
+                    <button class="key" onclick="addChar('2')">2</button>
+                    <button class="key" onclick="addChar('3')">3</button>
+                </div>
+                <div class="keyboard-row">
+                    <button class="key" onclick="addChar('4')">4</button>
+                    <button class="key" onclick="addChar('5')">5</button>
+                    <button class="key" onclick="addChar('6')">6</button>
+                </div>
+                <div class="keyboard-row">
+                    <button class="key" onclick="addChar('7')">7</button>
+                    <button class="key" onclick="addChar('8')">8</button>
+                    <button class="key" onclick="addChar('9')">9</button>
+                </div>
+                <div class="keyboard-row">
+                    <button class="key" onclick="addChar('0')">0</button>
+                    <button class="key" onclick="addChar(',')">,</button>
+                    <button class="key" onclick="addChar('!_')">!</button>
+                </div>
             </div>
+
+            <!-- ULTIMA RIGA FISSA: 123 / SPAZIO / CANCELLA -->
             <div class="keyboard-row">
-                <button class="key" onclick="addChar('A')">A</button><button class="key" onclick="addChar('S')">S</button><button class="key" onclick="addChar('D')">D</button><button class="key" onclick="addChar('F')">F</button><button class="key" onclick="addChar('G')">G</button><button class="key" onclick="addChar('H')">H</button><button class="key" onclick="addChar('J')">J</button><button class="key" onclick="addChar('K')">K</button><button class="key" onclick="addChar('L')">L</button>
-            </div>
-            <div class="keyboard-row">
-                <button class="key" onclick="addChar('Z')">Z</button><button class="key" onclick="addChar('X')">X</button><button class="key" onclick="addChar('C')">C</button><button class="key" onclick="addChar('V')">V</button><button class="key" onclick="addChar('B')">B</button><button class="key" onclick="addChar('N')">N</button><button class="key" onclick="addChar('M')">M</button><button class="key" onclick="addChar('.')">.</button><button class="key" onclick="addChar('?')">?</button>
-            </div>
-            <div class="keyboard-row">
+                <button class="key key-num-toggle" id="toggle-btn" onclick="toggleNumbers()">123</button>
                 <button class="key key-space" onclick="addChar(' ')">SPAZIO</button>
                 <button class="key key-delete" onclick="deleteChar()">⌫</button>
             </div>
         </div>
     </div>
+
     <script>
         let currentText = "";
+        let isNumberLayer = false;
         const textBox = document.getElementById("text-box");
-        function updateDisplay() { textBox.innerText = currentText; textBox.scrollLeft = textBox.scrollWidth; }
-        function addChar(char) { currentText += char; updateDisplay(); }
-        function insertText(word) { currentText += word; updateDisplay(); }
-        function deleteChar() { currentText = currentText.slice(0, -1); updateDisplay(); }
-        function clearText() { currentText = ""; updateDisplay(); }
+        const letterLayer = document.getElementById("letter-layer");
+        const numberLayer = document.getElementById("number-layer");
+        const toggleBtn = document.getElementById("toggle-btn");
+
+        function updateDisplay() { 
+            textBox.innerText = currentText; 
+            textBox.scrollLeft = textBox.scrollWidth; 
+        }
+
+        function addChar(char) { 
+            currentText += char; 
+            updateDisplay(); 
+        }
+
+        function insertText(word) { 
+            currentText += word; 
+            updateDisplay(); 
+        }
+
+        function deleteChar() { 
+            currentText = currentText.slice(0, -1); 
+            updateDisplay(); 
+        }
+
+        function clearText() { 
+            currentText = ""; 
+            updateDisplay(); 
+        }
+
+        function toggleNumbers() {
+            isNumberLayer = !isNumberLayer;
+            if (isNumberLayer) {
+                letterLayer.style.display = "none";
+                numberLayer.style.display = "flex";
+                toggleBtn.innerText = "ABC";
+                toggleBtn.style.backgroundColor = "#455a64";
+            } else {
+                letterLayer.style.display = "flex";
+                numberLayer.style.display = "none";
+                toggleBtn.innerText = "123";
+                toggleBtn.style.backgroundColor = "#90a4ae";
+            }
+        }
+
         function speakText() {
             if (!currentText) return;
             const utterance = new SpeechSynthesisUtterance(currentText);
