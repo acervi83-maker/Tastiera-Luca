@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tastiera Semplice</title>
+    <title>Tastiera Nativa iOS</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body, html { width: 100%; height: 100vh; height: 100dvh; background-color: #f0f2f5; display: flex; flex-direction: column; overflow: hidden; touch-action: manipulation; position: fixed; }
@@ -11,20 +11,21 @@
         /* Casella del testo in alto */
         #top-section { height: 22vh; display: flex; flex-direction: column; background-color: #ffffff; border-bottom: 2px solid #ccc; padding: 6px; gap: 4px; flex-shrink: 0; }
         #text-and-actions { height: 100%; display: flex; gap: 6px; }
-        #text-box { flex: 1; background-color: #fafafa; border: 2px solid #b0bec5; border-radius: 6px; padding: 6px 10px; font-size: 22px; font-weight: bold; color: #333; display: flex; align-items: center; overflow-x: auto; white-space: nowrap; }
+        
+        /* Area di testo principale (cliccabile per richiamare il focus nativo se serve) */
+        #text-box { flex: 1; background-color: #fafafa; border: 2px solid #b0bec5; border-radius: 6px; padding: 6px 10px; font-size: 22px; font-weight: bold; color: #333; display: flex; align-items: center; overflow-x: auto; white-space: nowrap; outline: none; }
+        
+        /* Campo di input nativo nascosto ma attivo per la predizione di sistema */
+        #native-input { position: absolute; opacity: 0; pointer-events: none; height: 0; width: 0; }
+
         .action-btn { width: 14%; border: none; border-radius: 6px; font-size: 18px; font-weight: bold; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         #btn-clear { background-color: #e53935; }
         #btn-speak { background-color: #43a047; }
 
-        /* Sezione inferiore: Predittivo + Tastiera */
-        #keyboard-section { height: 78vh; height: 78dvh; background-color: #cfd8dc; display: flex; flex-direction: column; padding: 4px; gap: 4px; flex-shrink: 0; }
+        /* Sezione inferiore: Tastiera personalizzata */
+        #keyboard-section { height: 78vh; height: 78dvh; background-color: #cfd8dc; display: flex; flex-direction: column; padding: 4px; gap: 4px; flex-shrink: 0; justify-content: flex-end; }
         
-        /* Barra predittiva spostata sopra la tastiera */
-        #prediction-bar { height: 11%; display: flex; gap: 4px; }
-        .pred-btn { flex: 1; background-color: #e3f2fd; border: 1px solid #90caf9; border-radius: 6px; font-size: 15px; font-weight: bold; color: #0d47a1; display: flex; align-items: center; justify-content: center; cursor: pointer; white-space: nowrap; padding: 0 4px; }
-
-        /* Righe dei tasti */
-        .keyboard-rows-container { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        .keyboard-rows-container { display: flex; flex-direction: column; gap: 4px; height: 100%; }
         .keyboard-row { flex: 1; display: flex; gap: 4px; min-height: 0; }
         .key { flex: 1; background-color: #ffffff; border: none; border-radius: 8px; font-size: 22px; font-weight: bold; color: #263238; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 3px rgba(0,0,0,0.15); cursor: pointer; user-select: none; -webkit-user-select: none; }
         .key:active { background-color: #b0bec5; transform: scale(0.98); }
@@ -35,18 +36,17 @@
 <body>
     <div id="top-section">
         <div id="text-and-actions">
-            <div id="text-box"></div>
+            <!-- Campo visivo -->
+            <div id="text-box" onclick="focusNativeInput()"></div>
+            <!-- Input nativo invisibile per catturare le funzioni di sistema di iOS -->
+            <input type="text" id="native-input" autocomplete="on" autocorrect="on" autocapitalize="sentences">
+            
             <button id="btn-clear" class="action-btn" onclick="clearText()">🗑️</button>
             <button id="btn-speak" class="action-btn" onclick="speakText()">🔊</button>
         </div>
     </div>
+    
     <div id="keyboard-section">
-        <div id="prediction-bar">
-            <button class="pred-btn" onclick="insertText('CIAO ')">CIAO</button>
-            <button class="pred-btn" onclick="insertText('COME ')">COME</button>
-            <button class="pred-btn" onclick="insertText('GRAZIE ')">GRAZIE</button>
-            <button class="pred-btn" onclick="insertText('SI ')">SÌ</button>
-        </div>
         <div class="keyboard-rows-container">
             <div class="keyboard-row">
                 <button class="key" onclick="addChar('1')">1</button><button class="key" onclick="addChar('2')">2</button><button class="key" onclick="addChar('3')">3</button><button class="key" onclick="addChar('4')">4</button><button class="key" onclick="addChar('5')">5</button><button class="key" onclick="addChar('6')">6</button><button class="key" onclick="addChar('7')">7</button><button class="key" onclick="addChar('8')">8</button><button class="key" onclick="addChar('9')">9</button><button class="key" onclick="addChar('0')">0</button>
@@ -66,21 +66,72 @@
             </div>
         </div>
     </div>
+
     <script>
-        let currentText = "";
         const textBox = document.getElementById("text-box");
-        function updateDisplay() { textBox.innerText = currentText; textBox.scrollLeft = textBox.scrollWidth; }
-        function addChar(char) { currentText += char; updateDisplay(); }
-        function insertText(word) { currentText += word; updateDisplay(); }
-        function deleteChar() { currentText = currentText.slice(0, -1); updateDisplay(); }
-        function clearText() { currentText = ""; updateDisplay(); }
+        const nativeInput = document.getElementById("native-input");
+
+        function focusNativeInput() {
+            nativeInput.focus();
+        }
+
+        // Sincronizza l'input nativo con la schermata grafica principale
+        nativeInput.addEventListener("input", (e) => {
+            textBox.innerText = nativeInput.value;
+            textBox.scrollLeft = textBox.scrollWidth;
+        });
+
+        function addChar(char) {
+            nativeInput.focus();
+            const start = nativeInput.selectionStart;
+            const end = nativeInput.selectionEnd;
+            const val = nativeInput.value;
+            
+            nativeInput.value = val.slice(0, start) + char + val.slice(end);
+            nativeInput.selectionStart = nativeInput.selectionEnd = start + char.length;
+            
+            // Aggiorna la vista
+            textBox.innerText = nativeInput.value;
+            textBox.scrollLeft = textBox.scrollWidth;
+        }
+
+        function deleteChar() {
+            nativeInput.focus();
+            const start = nativeInput.selectionStart;
+            const end = nativeInput.selectionEnd;
+            const val = nativeInput.value;
+            
+            if (start !== end) {
+                nativeInput.value = val.slice(0, start) + val.slice(end);
+                nativeInput.selectionStart = nativeInput.selectionEnd = start;
+            } else if (start > 0) {
+                nativeInput.value = val.slice(0, start - 1) + val.slice(start);
+                nativeInput.selectionStart = nativeInput.selectionEnd = start - 1;
+            }
+            
+            textBox.innerText = nativeInput.value;
+            textBox.scrollLeft = textBox.scrollWidth;
+        }
+
+        function clearText() {
+            nativeInput.value = "";
+            textBox.innerText = "";
+            nativeInput.focus();
+        }
+
         function speakText() {
-            if (!currentText) return;
-            const utterance = new SpeechSynthesisUtterance(currentText);
+            const textToSpeak = nativeInput.value;
+            if (!textToSpeak) return;
+            const utterance = new SpeechSynthesisUtterance(textToSpeak);
             utterance.lang = 'it-IT';
             utterance.rate = 0.9;
             window.speechSynthesis.speak(utterance);
         }
+
+        // Attiva il focus all'avvio
+        window.onload = () => {
+            nativeInput.focus();
+        };
     </script>
 </body>
 </html>
