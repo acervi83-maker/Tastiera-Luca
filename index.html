@@ -8,53 +8,47 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body, html { width: 100%; height: 100vh; height: 100dvh; background-color: #f0f2f5; display: flex; flex-direction: column; overflow: hidden; touch-action: manipulation; position: fixed; }
         
-        /* Casella del testo in alto */
-        #top-section { height: 22vh; display: flex; flex-direction: column; background-color: #ffffff; border-bottom: 2px solid #ccc; padding: 6px; gap: 4px; flex-shrink: 0; }
-        #text-and-actions { height: 100%; display: flex; gap: 6px; }
-        #text-box { flex: 1; background-color: #fafafa; border: 2px solid #b0bec5; border-radius: 6px; padding: 6px 10px; font-size: 24px; font-weight: bold; color: #333; display: flex; align-items: center; overflow-x: auto; white-space: nowrap; }
-        .action-btn { width: 14%; border: none; border-radius: 6px; font-size: 18px; font-weight: bold; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        /* Casella del testo in alto (ingrandita per 2-3 righe) */
+        #top-section { height: 30vh; display: flex; flex-direction: column; background-color: #ffffff; border-bottom: 2px solid #ccc; padding: 8px; gap: 6px; flex-shrink: 0; }
+        #text-and-actions { height: 100%; display: flex; gap: 8px; }
+        
+        #text-box { flex: 1; background-color: #fafafa; border: 2px solid #b0bec5; border-radius: 8px; padding: 10px 12px; font-size: 26px; font-weight: bold; color: #333; display: flex; align-items: flex-start; overflow-y: auto; word-break: break-word; white-space: pre-wrap; line-height: 1.3; }
+        
+        .action-buttons-container { display: flex; flex-direction: column; width: 15%; gap: 6px; }
+        .action-btn { flex: 1; border: none; border-radius: 8px; font-size: 20px; font-weight: bold; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         #btn-clear { background-color: #e53935; }
         #btn-speak { background-color: #43a047; }
 
-        /* Sezione inferiore: Predittivo + Tastiera */
-        #keyboard-section { height: 78vh; height: 78dvh; background-color: #cfd8dc; display: flex; flex-direction: column; padding: 4px; gap: 4px; flex-shrink: 0; }
+        /* Sezione inferiore: Tastiera abbassata */
+        #keyboard-section { height: 70vh; height: 70dvh; background-color: #cfd8dc; display: flex; flex-direction: column; padding: 6px; gap: 6px; flex-shrink: 0; justify-content: flex-end; }
         
-        /* Barra predittiva */
-        #prediction-bar { height: 12%; display: flex; gap: 4px; }
-        .pred-btn { flex: 1; background-color: #e3f2fd; border: 1px solid #90caf9; border-radius: 6px; font-size: 16px; font-weight: bold; color: #0d47a1; display: flex; align-items: center; justify-content: center; cursor: pointer; white-space: nowrap; padding: 0 4px; }
-
-        /* Righe dei tasti (spazio ingrandito per le lettere) */
-        .keyboard-rows-container { flex: 1; display: flex; flex-direction: column; gap: 4px; }
-        .keyboard-row { flex: 1; display: flex; gap: 4px; min-height: 0; }
+        .keyboard-rows-container { display: flex; flex-direction: column; gap: 6px; height: 100%; }
+        .keyboard-row { flex: 1; display: flex; gap: 6px; min-height: 0; }
         
-        .key { flex: 1; background-color: #ffffff; border: none; border-radius: 8px; font-size: 26px; font-weight: bold; color: #263238; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 3px rgba(0,0,0,0.15); cursor: pointer; user-select: none; -webkit-user-select: none; }
+        .key { flex: 1; background-color: #ffffff; border: none; border-radius: 10px; font-size: 28px; font-weight: bold; color: #263238; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 4px rgba(0,0,0,0.15); cursor: pointer; user-select: none; -webkit-user-select: none; }
         .key:active { background-color: #b0bec5; transform: scale(0.98); }
         
-        .key-num-toggle { flex: 1; background-color: #90a4ae; color: white; font-size: 18px; }
-        .key-space { flex: 3; background-color: #ffffff; font-size: 18px; color: #555; }
-        .key-delete { flex: 1; background-color: #90a4ae; color: white; font-size: 22px; }
+        .key-num-toggle { flex: 1; background-color: #90a4ae; color: white; font-size: 20px; }
+        .key-space { flex: 3; background-color: #ffffff; font-size: 20px; color: #555; }
+        .key-delete { flex: 1; background-color: #90a4ae; color: white; font-size: 24px; }
 
-        /* Contenitore tastierino numerico (nascosto di default) */
-        #number-layer { display: none; flex-direction: column; flex: 1; gap: 4px; }
-        #letter-layer { display: flex; flex-direction: column; flex: 1; gap: 4px; }
+        /* Contenitore tastierino numerico */
+        #number-layer { display: none; flex-direction: column; flex: 1; gap: 6px; }
+        #letter-layer { display: flex; flex-direction: column; flex: 1; gap: 6px; }
     </style>
 </head>
 <body>
     <div id="top-section">
         <div id="text-and-actions">
             <div id="text-box"></div>
-            <button id="btn-clear" class="action-btn" onclick="clearText()">🗑️</button>
-            <button id="btn-speak" class="action-btn" onclick="speakText()">🔊</button>
+            <div class="action-buttons-container">
+                <button id="btn-clear" class="action-btn" onclick="clearText()">🗑️</button>
+                <button id="btn-speak" class="action-btn" onclick="speakText()">🔊</button>
+            </div>
         </div>
     </div>
+    
     <div id="keyboard-section">
-        <div id="prediction-bar">
-            <button class="pred-btn" onclick="insertText('CIAO ')">CIAO</button>
-            <button class="pred-btn" onclick="insertText('COME ')">COME</button>
-            <button class="pred-btn" onclick="insertText('GRAZIE ')">GRAZIE</button>
-            <button class="pred-btn" onclick="insertText('SI ')">SÌ</button>
-        </div>
-
         <div class="keyboard-rows-container">
             <!-- SCHERMATA LETTERE QWERTY -->
             <div id="letter-layer">
@@ -69,7 +63,7 @@
                 </div>
             </div>
 
-            <!-- SCHERMATA NUMERI (ALTERNATIVA) -->
+            <!-- SCHERMATA NUMERI -->
             <div id="number-layer">
                 <div class="keyboard-row">
                     <button class="key" onclick="addChar('1')">1</button>
@@ -89,11 +83,11 @@
                 <div class="keyboard-row">
                     <button class="key" onclick="addChar('0')">0</button>
                     <button class="key" onclick="addChar(',')">,</button>
-                    <button class="key" onclick="addChar('!_')">!</button>
+                    <button class="key" onclick="addChar('!')">!</button>
                 </div>
             </div>
 
-            <!-- ULTIMA RIGA FISSA: 123 / SPAZIO / CANCELLA -->
+            <!-- ULTIMA RIGA: 123 / SPAZIO / CANCELLA -->
             <div class="keyboard-row">
                 <button class="key key-num-toggle" id="toggle-btn" onclick="toggleNumbers()">123</button>
                 <button class="key key-space" onclick="addChar(' ')">SPAZIO</button>
@@ -112,16 +106,11 @@
 
         function updateDisplay() { 
             textBox.innerText = currentText; 
-            textBox.scrollLeft = textBox.scrollWidth; 
+            textBox.scrollTop = textBox.scrollHeight; 
         }
 
         function addChar(char) { 
             currentText += char; 
-            updateDisplay(); 
-        }
-
-        function insertText(word) { 
-            currentText += word; 
             updateDisplay(); 
         }
 
