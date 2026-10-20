@@ -8,8 +8,8 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body, html { width: 100%; height: 100vh; height: 100dvh; background-color: #f0f2f5; display: flex; flex-direction: column; overflow: hidden; touch-action: manipulation; position: fixed; }
         
-        /* Casella del testo in alto (ingrandita per 2-3 righe) */
-        #top-section { height: 30vh; display: flex; flex-direction: column; background-color: #ffffff; border-bottom: 2px solid #ccc; padding: 8px; gap: 6px; flex-shrink: 0; }
+        /* Casella del testo in alto (circa 38%) */
+        #top-section { height: 38vh; height: 38dvh; display: flex; flex-direction: column; background-color: #ffffff; border-bottom: 2px solid #ccc; padding: 8px; gap: 6px; flex-shrink: 0; }
         #text-and-actions { height: 100%; display: flex; gap: 8px; }
         
         #text-box { flex: 1; background-color: #fafafa; border: 2px solid #b0bec5; border-radius: 8px; padding: 10px 12px; font-size: 26px; font-weight: bold; color: #333; display: flex; align-items: flex-start; overflow-y: auto; word-break: break-word; white-space: pre-wrap; line-height: 1.3; }
@@ -19,22 +19,25 @@
         #btn-clear { background-color: #e53935; }
         #btn-speak { background-color: #43a047; }
 
-        /* Sezione inferiore: Tastiera abbassata */
-        #keyboard-section { height: 70vh; height: 70dvh; background-color: #cfd8dc; display: flex; flex-direction: column; padding: 6px; gap: 6px; flex-shrink: 0; justify-content: flex-end; }
+        /* Sezione inferiore della tastiera (circa 62% totale: lettere + riga bassa) */
+        #keyboard-section { height: 62vh; height: 62dvh; background-color: #cfd8dc; display: flex; flex-direction: column; padding: 6px; gap: 6px; flex-shrink: 0; justify-content: space-between; }
         
         .keyboard-rows-container { display: flex; flex-direction: column; gap: 6px; height: 100%; }
+        
+        /* Blocco delle lettere (3 righe) */
+        #letter-layer, #number-layer { flex: 3; display: flex; flex-direction: column; gap: 6px; }
+        #number-layer { display: none; }
+
         .keyboard-row { flex: 1; display: flex; gap: 6px; min-height: 0; }
         
-        .key { flex: 1; background-color: #ffffff; border: none; border-radius: 10px; font-size: 28px; font-weight: bold; color: #263238; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 4px rgba(0,0,0,0.15); cursor: pointer; user-select: none; -webkit-user-select: none; }
+        .key { flex: 1; background-color: #ffffff; border: none; border-radius: 10px; font-size: 26px; font-weight: bold; color: #263238; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 3px rgba(0,0,0,0.15); cursor: pointer; user-select: none; -webkit-user-select: none; }
         .key:active { background-color: #b0bec5; transform: scale(0.98); }
         
+        /* Riga inferiore bloccata esattamente al 20% dello spazio tastiera */
+        .bottom-row { flex: 1.2; display: flex; gap: 6px; min-height: 0; }
         .key-num-toggle { flex: 1; background-color: #90a4ae; color: white; font-size: 20px; }
         .key-space { flex: 3; background-color: #ffffff; font-size: 20px; color: #555; }
         .key-delete { flex: 1; background-color: #90a4ae; color: white; font-size: 24px; }
-
-        /* Contenitore tastierino numerico */
-        #number-layer { display: none; flex-direction: column; flex: 1; gap: 6px; }
-        #letter-layer { display: flex; flex-direction: column; flex: 1; gap: 6px; }
     </style>
 </head>
 <body>
@@ -87,8 +90,8 @@
                 </div>
             </div>
 
-            <!-- ULTIMA RIGA: 123 / SPAZIO / CANCELLA -->
-            <div class="keyboard-row">
+            <!-- ULTIMA RIGA PROPORZIONATA -->
+            <div class="bottom-row">
                 <button class="key key-num-toggle" id="toggle-btn" onclick="toggleNumbers()">123</button>
                 <button class="key key-space" onclick="addChar(' ')">SPAZIO</button>
                 <button class="key key-delete" onclick="deleteChar()">⌫</button>
